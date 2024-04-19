@@ -1,15 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from './App';
-import Appointments from "./Appointments";
+import App from "./App";
+import Appointments from "./patient/Appointments";
+import DashBoard from "./doctor/components/dashBoard/DashBoard";
+import NavBar from "./doctor/components/navBar/NavBar";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Appointments/>
+    <NavBar />
+    {/* for patient side or client */}
+    {/* <Appointments /> */}
+
+    {/* for doctor side or server */}
+    <DashBoard />
   </React.StrictMode>
 );
 
