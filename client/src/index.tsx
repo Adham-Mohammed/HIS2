@@ -5,19 +5,25 @@ import App from "./App";
 import Appointments from "./patient/Appointments";
 import DashBoard from "./doctor/components/dashBoard/DashBoard";
 import NavBar from "./doctor/components/navBar/NavBar";
+import { Box, Stack } from "@mui/material";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <Box sx={{
+    backgroundColor: "#EEEFFF",
+    overflowX: "hidden",
+    overflowY: "auto",
+  }}>
     <NavBar />
-    {/* for patient side or client */}
-    {/* <Appointments /> */}
-
+    
     {/* for doctor side or server */}
     <DashBoard />
-  </React.StrictMode>
+
+    {/* for patient side or client */}
+    {/* <Appointments /> */}
+  </Box>
 );
 
 // If you want to start measuring performance in your app, pass a function

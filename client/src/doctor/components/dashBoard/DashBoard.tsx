@@ -17,6 +17,8 @@ import {
   Menu,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CreateSlotModal from "./popUP/CreateSlotModal";
 
@@ -76,6 +78,7 @@ const DashBoard: React.FC<DashBoardProps> = () => {
 
   const weekDates = generateWeekDates();
 
+  // data shown in the table, should be replaced by dataBase
   const rowData: Patient[] = [
     { time: "9:00 AM", patientName: "John Doe", patientID: 1 },
     { time: "10:30 AM", patientName: "Jane Smith", patientID: 2 },
@@ -108,7 +111,7 @@ const DashBoard: React.FC<DashBoardProps> = () => {
   };
 
   return (
-    <div className={styles.dashboardContainer}>
+    <Box className={styles.dashboardContainer}>
       <TableContainer component={Paper} className={styles.tableContainer}>
         <div className={styles.createSlotButtonContainer}>
           <Stack
@@ -158,14 +161,14 @@ const DashBoard: React.FC<DashBoardProps> = () => {
               <TableRow key={index}>
                 <TableCell className={styles.tableCell}>
                   <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                    <div className={styles.timeCell}>
+                    {/* <div className={styles.timeCell}> */}
                       <Typography
                         variant="body1"
-                        className={styles.timeTextStyle}
+                        className={styles.timeCell}
                       >
                         {row.time}
                       </Typography>
-                    </div>
+                    {/* </div> */}
                     <Typography
                       variant="body1"
                       className={styles.patientName}
@@ -183,7 +186,13 @@ const DashBoard: React.FC<DashBoardProps> = () => {
                       aria-label="Delete"
                       className={styles.deleteIcon}
                     >
-                      <DeleteIcon />
+                      <DeleteIcon/>
+                    </IconButton>
+                    <IconButton
+                      aria-label="confirm"
+                      className={styles.checkIcon}
+                    >
+                      <CheckIcon />
                     </IconButton>
                   </Stack>
                 </TableCell>
@@ -230,7 +239,7 @@ const DashBoard: React.FC<DashBoardProps> = () => {
           weekDates={weekDates}
         />
       </LocalizationProvider>
-    </div>
+    </Box>
   );
 };
 
