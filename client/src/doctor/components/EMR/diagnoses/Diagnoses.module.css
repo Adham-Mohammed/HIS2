@@ -1,0 +1,30 @@
+.container {
+  border: solid 2px rgb(255, 255, 255);
+  position: relative;
+  border-radius: 1rem;
+  background: #fff;
+  /* display: flex; */
+  flex-direction: row;
+  width:98%;
+  /* min-height: 30vh; */
+  margin: 15px auto;
+  margin-bottom: 0;
+  padding: 1rem 1rem;
+  /* drop shadow */
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.32);
+}
+.container > * {
+    margin: 4px; /* Add margin to child elements */
+}
+
+/* button stuff */
+.button {
+    background: linear-gradient(90deg, #13d2de, #01b6b6) !important;
+    border: none!important;
+    border-radius: 0.8rem!important;
+    color: #fff!important;
+    font-weight: bold!important;
+    cursor: pointer!important;
+}
