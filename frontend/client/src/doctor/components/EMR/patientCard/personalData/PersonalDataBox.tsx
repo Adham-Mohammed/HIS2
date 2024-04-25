@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Stack, Box } from "@mui/material";
 
@@ -5,9 +6,9 @@ import styles from "./PersonalDataBox.module.css";
 
 interface PersonalDataProps {
   name: string;
-  weight: string;
-  length: string;
-  age: string;
+  weight: number;
+  length: number;
+  age: number;
 }
 
 const PersonalData: React.FC<PersonalDataProps> = ({
@@ -20,13 +21,13 @@ const PersonalData: React.FC<PersonalDataProps> = ({
   return (
     <Box className={styles.box_container}>
 
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         <span className={styles.titleText}>
           Personal Data
         </span>
         
         <span className={styles.labelText}>
-          Name: <span className={styles.parameterText}> Jone</span> 
+          Name: <span className={styles.parameterText}>{name}</span> 
         </span>
         <span className={styles.labelText}>
           Weight: <span className={styles.parameterText}>{weight} kg</span> 
@@ -37,17 +38,10 @@ const PersonalData: React.FC<PersonalDataProps> = ({
         <span className={styles.labelText}>
           Age: <span className={styles.parameterText}>{age}</span>
         </span>
+        {/* Add more personal data fields as needed */}
       </Stack>
     </Box>
   );
 };
 
 export default PersonalData;
-
-
-
-
-
-
-
-

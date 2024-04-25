@@ -1,26 +1,29 @@
-import React from "react";
-import { Box, Stack } from "@mui/material";
+
+import React, { useState } from "react";
+import { Stack, Box } from "@mui/material";
+
 import styles from "./HistoryBox.module.css";
 
-interface HistoryBoxProps {
-  drugs: string[];
-  illnesses: string[];
-  medicalTests: string[];
-  operations: string[];
-}
+const HistoryBox = () => {
+  // Sample data for drugs, Illnesses, and medical tests
+  const initialDrugs = ["Aspirin", "Ibuprofen", "Paracetamol"];
+  const initialIllnesses = ["Flu", "Common Cold", "Allergies"];
+  const initialMedicalTests = ["Blood Test", "X-Ray", "MRI"];
+  const initialRecommendations = ["Appendectomy", "Knee Replacement", "Cataract Surgery"];
 
-const HistoryBox: React.FC<HistoryBoxProps> = ({
-  drugs,
-  illnesses,
-  medicalTests,
-  operations,
-}) => {
+  // State to hold the data
+  const [drugs, setDrugs] = useState(initialDrugs);
+  const [illnesses, setIllnesses] = useState(initialIllnesses);
+  const [medicalTests, setMedicalTests] = useState(initialMedicalTests);
+  const [recommendations, setRecommendations] = useState(initialRecommendations);
+
   return (
     <Box className={styles.historyBox}>
       <Stack spacing={2}>
         <span className={styles.titleText}>History</span>
 
         <Stack direction="row" spacing={2} style={{ width: '100%' }}>
+
           <Box className={styles.subBox}>
             <span className={styles.titleText}>Drugs</span>
             <ul>
@@ -30,39 +33,33 @@ const HistoryBox: React.FC<HistoryBoxProps> = ({
             </ul>
           </Box>
 
-
-
           <Box className={styles.subBox}>
             <span className={styles.titleText}>Illnesses</span>
             <ul>
-                {illnesses.map((illness, index) => (
-                <li className={styles.listText} key={index}>{illness}</li>
+              {illnesses.map((Illnesse, index) => (
+                <li className={styles.listText} key={index}>{Illnesse}</li>
               ))}
             </ul>
           </Box>
 
-
-
-
-          <Box className={styles.subBox}>
+          <Box className={styles.subBoxTwoColumns}>
+            <div className={styles.column}>
               <span className={styles.titleText}>Medical Tests</span>
               <ul>
                 {medicalTests.map((test, index) => (
                   <li className={styles.listText} key={index}>{test}</li>
                 ))}
-            </ul>
-          </Box>
-
-          <Box className={styles.subBox}>
-              <span className={styles.titleText}>Operations</span>
+              </ul>
+            </div>
+            <div className={styles.column}>
+              <span className={styles.titleText}>Recommendations</span>
               <ul className={styles.SeparateLine}>
-                {operations.map((operation, index) => (
-                  <li className={styles.listText} key={index}>{operation}</li>
+                {recommendations.map((recommendation, index) => (
+                  <li className={styles.listText} key={index}>{recommendation}</li>
                 ))}
               </ul>
+            </div>
           </Box>
-
-
 
         </Stack>
       </Stack>

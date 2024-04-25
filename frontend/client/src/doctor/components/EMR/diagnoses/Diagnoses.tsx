@@ -3,72 +3,26 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Box, MenuItem, Stack } from "@mui/material";
 import styles from "./Diagnoses.module.css";
-import DashBoard from "../../dashBoard/DashBoard";
-interface DiagnosesData {
-  name: string;
-  weight: string;
-  length: string;
-  age: string;
-  id: string;
-  diagnostic: string;
-  recommendations: string;
-  drugs: string[];
-  tests: string[];
-  illnesses: [],
-  operations: [],
-}
 
-const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) => {
-  const [name, setName] = useState("");
+const DiagnosticTextField = () => {
   const [weight, setWeight] = useState("");
   const [length, setLength] = useState("");
   const [age, setAge] = useState("");
-  const [id, setID] = useState("");
-  const [recommendations, setRecommendations] = useState("");
-  const [diagnostic, setDiagnostic] = useState("");
-  const [illnesses, setIllnesses] = useState([""]);
+  const [recommendation, setRecommendation] = useState("");
+  const [illnesse, setIllnesse] = useState("");
   const [drug1, setDrug1] = useState("");
   const [drug2, setDrug2] = useState("");
   const [test1, setTest1] = useState("");
   const [test2, setTest2] = useState("");
 
   const handleCalculate = () => {
-    const newPatient: DiagnosesData = {
-      name,
-      weight,
-      length,
-      age,
-      id,
-      diagnostic,
-      recommendations,
-      drugs: [drug1, drug2],
-      tests: [test1, test2],
-      illnesses: [],
-      operations: []
-    };
-    onSave(newPatient);
-    clearInputFields();
+    // Your Illnesses logic goes here
+    // This is a placeholder logic, replace it with your actual Illnesses algorithm
+    const illnessesResult = `Weight: ${weight}, Length: ${length}, Age: ${age}`;
+    const recommendationResult = "Your recommendation go here";
+    setIllnesse(illnessesResult);
+    setRecommendation(recommendationResult);
   };
-
-
-  const handlesearch = () =>{
-
-  }
-
-  const clearInputFields = () => {
-    setName("");
-    setWeight("");
-    setLength("");
-    setAge("");
-    // setID("");
-    setDiagnostic("");
-    setRecommendations("");
-    setDrug1("");
-    setDrug2("");
-    setTest1("");
-    setTest2("");
-  };
-
   return (
     <>
       {/* this diagnoses text filed section */}
@@ -79,7 +33,7 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
         />
-          <TextField
+        <TextField
           label="Length"
           variant="outlined"
           value={length}
@@ -91,28 +45,20 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
           value={age}
           onChange={(e) => setAge(e.target.value)}
         />
-        <TextField
-          label="ID"
-          variant="outlined"
-          value={id}
-          onChange={(e) => setID(e.target.value)}
-        />
         <div>
           <TextField
-            label="Illnesses"
+            label="Illnesse"
             variant="outlined"
-            multiline
             fullWidth
-            value={illnesses}
-            onChange={(e) => setIllnesses([e.target.value])}
+            value={illnesse}
+            onChange={(e) => setIllnesse(e.target.value)}
           />
           <TextField
-            label="Recommendations"
+            label="Recommendation"
             variant="outlined"
-            multiline
             fullWidth
-            value={recommendations}
-            onChange={(e) => setRecommendations(e.target.value)}
+            value={recommendation}
+            onChange={(e) => setRecommendation(e.target.value)}
           />
         </div>
 
@@ -130,8 +76,6 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
             <MenuItem value="Aspirin">Aspirin</MenuItem>
             <MenuItem value="Ibuprofen">Ibuprofen</MenuItem>
             <MenuItem value="Paracetamol">Paracetamol</MenuItem>
-            <MenuItem value="Paracetamol">Panadole</MenuItem>
-            <MenuItem value="Paracetamol">none</MenuItem>
             {/* Add more drug options as needed */}
           </TextField>
           <TextField
@@ -146,9 +90,6 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
             <MenuItem value="Aspirin">Aspirin</MenuItem>
             <MenuItem value="Ibuprofen">Ibuprofen</MenuItem>
             <MenuItem value="Paracetamol">Paracetamol</MenuItem>
-            <MenuItem value="Paracetamol">Panadole</MenuItem>
-            <MenuItem value="Paracetamol">none</MenuItem>
-
             {/* Add more drug options as needed */}
           </TextField>
         </Stack>
@@ -166,8 +107,6 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
             <MenuItem value="Blood Test">Blood Test</MenuItem>
             <MenuItem value="X-Ray">X-Ray</MenuItem>
             <MenuItem value="MRI">MRI</MenuItem>
-            <MenuItem value="MRI">CT-Scan</MenuItem>
-            <MenuItem value="MRI">none</MenuItem>
             {/* Add more test options as needed */}
           </TextField>
           <TextField
@@ -182,17 +121,13 @@ const DiagnosesFiled = ({ onSave }: { onSave: (data: DiagnosesData) => void }) =
             <MenuItem value="Blood Test">Blood Test</MenuItem>
             <MenuItem value="X-Ray">X-Ray</MenuItem>
             <MenuItem value="MRI">MRI</MenuItem>
-            <MenuItem value="MRI">CT-Scan</MenuItem>
-            <MenuItem value="MRI">none</MenuItem>
             {/* Add more test options as needed */}
           </TextField>
         </Stack>
-        {/* Remaining text fields */}
-        <Button className={styles.button} onClick={handleCalculate}>Done</Button>
-        <Button className={styles.button} onClick={handlesearch}>Search</Button>
+        <Button className={styles.button}>Done</Button>
       </Box>
     </>
   );
 };
 
-export default DiagnosesFiled;
+export default DiagnosticTextField;

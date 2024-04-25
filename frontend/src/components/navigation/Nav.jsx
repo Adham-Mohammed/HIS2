@@ -24,12 +24,12 @@ const Nav = () => {
             <ul className="nav-links">
                 {user ?
                     <>
-                        <NavLink className='nav-childs' to="/dashboard">Dashboard</NavLink>
+                        <NavLink className='nav-childs' to="/patientList">Patient List</NavLink>
                         <NavLink className='nav-childs' to="/" onClick={handleLogout}>Logout</NavLink>
                     </>
                     :
                     <>
-                        <NavLink className='nav-childs' to="/dashboard">Dashboard</NavLink>
+                        <NavLink className='nav-childs' to="/patientList">Patient List</NavLink>
                     </>
                 }
             </ul>
