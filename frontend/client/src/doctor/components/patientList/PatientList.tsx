@@ -1,4 +1,4 @@
-// DashBoard.tsx
+// PatientList.tsx
 import React, { useState } from "react";
 import {
   Table,
@@ -16,21 +16,21 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddPatientModal from "./popUP/AddPatientModal";
 
-
-import styles from "./DashBoard.module.css"; // Import the CSS module
+import styles from "./PatientList.module.css"; // Import the CSS module
 
 interface Patient {
   patientName: string;
   patientID: number;
 }
 
-interface DashBoardProps {
+interface PatientListProps {
   // Other props if needed
 }
 
-const DashBoard: React.FC<DashBoardProps> = () => {
+const PatientList: React.FC<PatientListProps> = () => {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [showAddPatientModal, setShowAddPatientModal] =useState<boolean>(false);
+  const [showAddPatientModal, setShowAddPatientModal] =
+    useState<boolean>(false);
   // data shown in the table, should be replaced by dataBase
   const rowData: Patient[] = [
     { patientName: "John Doe", patientID: 1 },
@@ -54,9 +54,9 @@ const DashBoard: React.FC<DashBoardProps> = () => {
   const handleAddPatientModalClose = () => {
     setShowAddPatientModal(false);
   };
-  
+
   return (
-    <Box className={styles.dashboardContainer}>
+    <Box className={styles.patientListContainer}>
       <TableContainer component={Paper} className={styles.tableContainer}>
         <div className={styles.addPatientButtonContainer}>
           <Typography className={styles.textStyleHeader}>
@@ -80,13 +80,10 @@ const DashBoard: React.FC<DashBoardProps> = () => {
               <TableRow key={index}>
                 <TableCell className={styles.tableCell}>
                   <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                      <Typography
-                        variant="body1"
-                        className={styles.patientID}
-                      >
-                        ID:
-                        {row.patientID}
-                      </Typography>
+                    <Typography variant="body1" className={styles.patientID}>
+                      ID:
+                      {row.patientID}
+                    </Typography>
                     {/* </div> */}
                     <Typography
                       variant="body1"
@@ -142,4 +139,4 @@ const DashBoard: React.FC<DashBoardProps> = () => {
   );
 };
 
-export default DashBoard;
+export default PatientList;

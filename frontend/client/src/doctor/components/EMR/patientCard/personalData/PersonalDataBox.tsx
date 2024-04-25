@@ -21,7 +21,7 @@ const PersonalData: React.FC<PersonalDataProps> = ({
   return (
     <Box className={styles.box_container}>
 
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         <span className={styles.titleText}>
           Personal Data
         </span>
