@@ -16,7 +16,7 @@
   border-radius: 24px 24px 0 0!important;
 }
 
-.createSlotButton {
+.addPatientButton {
   display: flex;
   justify-content: flex-end;
   background: linear-gradient(285.17deg, #01b6b6 10.66%, #13d2de 102.7%);
@@ -28,12 +28,20 @@
   font-weight: 600 !important;
   font-family: "Roboto";
 }
-.createSlotButtonContainer {
+.addPatientButtonContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px;
   }
+
+.textStyleHeader {
+  font-family: "Roboto";
+  font-weight: bolder!important;
+  margin: 5px!important;
+  color: rgba(139, 139, 139, 1);
+  font-size: xx-large!important;
+}
 
 .textStyle {
   font-family: "Roboto";
@@ -70,7 +78,7 @@
   padding: 5px !important;
 }
 
-.timeCell {
+.patientID {
   flex-grow: 0;
   background: linear-gradient(285.17deg, #01b6b6 10.66%, #13d2de 102.7%);
   padding: 8px;

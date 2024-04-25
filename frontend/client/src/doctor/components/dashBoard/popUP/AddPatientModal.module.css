@@ -1,4 +1,4 @@
-/* CreateSlotModal.module.css */
+/* addPatientModal.module.css */
 .modalContainer {
   position: absolute;
   top: 50%;
@@ -17,15 +17,15 @@
   flex-direction: column;
 }
 
-/* CreateSlotModal.module.css */
-.createSlotHeader {
+/* addPatientModal.module.css */
+.addPatientHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-.createSlotText {
+.addPatientText {
   font-weight: 600;
   font-size: large;
   font-family: "Roboto";

@@ -9,26 +9,17 @@ import {
   Paper,
   Stack,
   Typography,
-  IconButton,
   Button,
   Modal,
   Box,
-  MenuItem,
-  Menu,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import CreateSlotModal from "./popUP/CreateSlotModal";
+import AddPatientModal from "./popUP/AddPatientModal";
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import styles from "./DashBoard.module.css"; // Import the CSS module
 
 interface Patient {
-  time: string;
   patientName: string;
   patientID: number;
 }
@@ -38,51 +29,13 @@ interface DashBoardProps {
 }
 
 const DashBoard: React.FC<DashBoardProps> = () => {
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString()
-  );
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [showCreateSlotModal, setShowCreateSlotModal] =
-    useState<boolean>(false);
-
-  const getWeekDates = () => {
-    const currentDate = new Date(selectedDate);
-    const currentDay = currentDate.getDay();
-    const diff =
-      currentDate.getDate() - currentDay + (currentDay === 0 ? -6 : 0);
-    const startDate = new Date(currentDate.setDate(diff));
-    const endDate = new Date(currentDate.setDate(diff + 6));
-    return { startDate, endDate };
-  };
-
-  const generateWeekDates = () => {
-    const { startDate, endDate } = getWeekDates();
-    const weekDates = [];
-    let currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-      weekDates.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return weekDates;
-  };
-
-  const formatDateString = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const weekDates = generateWeekDates();
-
+  const [showAddPatientModal, setShowAddPatientModal] =useState<boolean>(false);
   // data shown in the table, should be replaced by dataBase
   const rowData: Patient[] = [
-    { time: "9:00 AM", patientName: "John Doe", patientID: 1 },
-    { time: "10:30 AM", patientName: "Jane Smith", patientID: 2 },
-    { time: "1:45 PM", patientName: "Bob Johnson", patientID: 3 },
+    { patientName: "John Doe", patientID: 1 },
+    { patientName: "Jane Smith", patientID: 2 },
+    { patientName: "Bob Johnson", patientID: 3 },
     // Add more data as needed
   ];
 
@@ -94,64 +47,30 @@ const DashBoard: React.FC<DashBoardProps> = () => {
     setSelectedPatient(null);
   };
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchor(event.currentTarget);
+  const handleAddPatientClick = () => {
+    setShowAddPatientModal(true);
   };
 
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
+  const handleAddPatientModalClose = () => {
+    setShowAddPatientModal(false);
   };
-
-  const handleCreateSlotClick = () => {
-    setShowCreateSlotModal(true);
-  };
-
-  const handleCreateSlotModalClose = () => {
-    setShowCreateSlotModal(false);
-  };
-
+  
   return (
     <Box className={styles.dashboardContainer}>
       <TableContainer component={Paper} className={styles.tableContainer}>
-        <div className={styles.createSlotButtonContainer}>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            className={styles.textStyle}
-          >
-            {/* Customized Date Selection */}
-            <div className={styles.dateSelection} onClick={handleMenuOpen}>
-              {formatDateString(new Date(selectedDate))}
-            </div>
-            <Menu
-              anchorEl={menuAnchor}
-              open={Boolean(menuAnchor)}
-              onClose={handleMenuClose}
-              className={styles.menu}
-            >
-              {weekDates.map((date) => (
-                <MenuItem
-                  key={date.toISOString()}
-                  value={date.toISOString()}
-                  onClick={() => {
-                    setSelectedDate(date.toISOString());
-                    handleMenuClose();
-                  }}
-                >
-                  {formatDateString(date)}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Stack>
+        <div className={styles.addPatientButtonContainer}>
+          <Typography className={styles.textStyleHeader}>
+            {" "}
+            Patients List
+          </Typography>
 
           <Button
             variant="contained"
-            className={styles.createSlotButton}
+            className={styles.addPatientButton}
             startIcon={<AddCircleOutlineIcon />}
-            onClick={handleCreateSlotClick}
+            onClick={handleAddPatientClick}
           >
-            Create New Slot
+            Add New Patient
           </Button>
         </div>
 
@@ -161,12 +80,12 @@ const DashBoard: React.FC<DashBoardProps> = () => {
               <TableRow key={index}>
                 <TableCell className={styles.tableCell}>
                   <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-                    {/* <div className={styles.timeCell}> */}
                       <Typography
                         variant="body1"
-                        className={styles.timeCell}
+                        className={styles.patientID}
                       >
-                        {row.time}
+                        ID:
+                        {row.patientID}
                       </Typography>
                     {/* </div> */}
                     <Typography
@@ -176,24 +95,6 @@ const DashBoard: React.FC<DashBoardProps> = () => {
                     >
                       {row.patientName}
                     </Typography>
-                    <IconButton
-                      aria-label="Cancel"
-                      className={styles.cancelButton}
-                    >
-                      X
-                    </IconButton>
-                    <IconButton
-                      aria-label="Delete"
-                      className={styles.deleteIcon}
-                    >
-                      <DeleteIcon/>
-                    </IconButton>
-                    <IconButton
-                      aria-label="confirm"
-                      className={styles.checkIcon}
-                    >
-                      <CheckIcon />
-                    </IconButton>
                   </Stack>
                 </TableCell>
               </TableRow>
@@ -228,17 +129,15 @@ const DashBoard: React.FC<DashBoardProps> = () => {
         </Box>
       </Modal>
 
-      {/* Modal for creating a new slot */}
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <CreateSlotModal
-          open={showCreateSlotModal}
-          onClose={handleCreateSlotModalClose}
-          onSlotCreate={(date, time) =>
-            console.log("Slot created:", date, time)
-          }
-          weekDates={weekDates}
-        />
-      </LocalizationProvider>
+      {/* Modal for creating a new patient */}
+      <AddPatientModal
+        open={showAddPatientModal}
+        onClose={handleAddPatientModalClose}
+        onPatientCreate={(name, id) => {
+          // Placeholder function, you can handle patient creation logic here
+          console.log("Creating patient with name:", name, "and ID:", id);
+        }}
+      />
     </Box>
   );
 };
