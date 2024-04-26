@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from emr import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/v1/auth/", include('djoser.urls')),
     path("api/v1/auth/", include('djoser.urls.jwt')),
+    path('patients/', views.list_patients, name='list_patients'),
+    path('patients/create/', views.create_patient, name='create_patient'),
+    path('patients/<int:patient_id>/delete/', views.delete_patient, name='delete_patient'),
+    path('patients/<int:patient_id>/', views.retrieve_patient, name='retrieve_patient'),
+    path('patients/<int:patient_id>/update/', views.update_patient, name='update_patient'),
 ]
