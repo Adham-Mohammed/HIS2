@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 
 class Migration(migrations.Migration):
@@ -25,13 +26,13 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('age', models.IntegerField()),
-                ('height', models.FloatField()),
-                ('weight', models.FloatField()),
-                ('drugs', models.TextField()),
-                ('tests', models.TextField()),
-                ('illness', models.TextField()),
-                ('recommendations', models.TextField()),
+                ('age', models.TextField()),
+                ('height', models.TextField()),
+                ('weight', models.TextField()),
+                ('drugs', ArrayField(models.TextField())),
+                ('tests', ArrayField(models.TextField())),
+                ('illness', ArrayField(models.TextField())),
+                ('recommendations', ArrayField(models.TextField())),
                 ('doctor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='emr.doctor')),
             ],
         ),

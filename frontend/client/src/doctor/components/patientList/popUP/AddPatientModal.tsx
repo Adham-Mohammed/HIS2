@@ -7,7 +7,7 @@ import styles from "./AddPatientModal.module.css"; // Import the CSS module
 interface AddPatientModalProps {
   open: boolean;
   onClose: () => void;
-  onPatientCreate: (name: string, id: string) => void;
+  onPatientCreate: (name: string, id: string, doctor: number) => void;
 }
 
 const AddPatientModal: React.FC<AddPatientModalProps> = ({
@@ -17,9 +17,10 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
 }) => {
   const [patientName, setPatientName] = useState("");
   const [patientID, setPatientID] = useState("");
+  const [doctorID, setDoctorID] = useState(Number);
 
   const handleAddPatient = () => {
-    onPatientCreate(patientName, patientID);
+    onPatientCreate(patientName, patientID, doctorID);
     onClose();
   };
 
@@ -51,6 +52,13 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
             variant="outlined"
             value={patientID}
             onChange={(e) => setPatientID(e.target.value)}
+          />
+          <TextField
+            label="Doctor ID"
+            variant="outlined"
+            value={doctorID}
+            type="number"
+            onChange={(e) => setDoctorID(Number(e.target.value))}
           />
         </Stack>
 
