@@ -7,14 +7,14 @@ import styles from "./PersonalDataBox.module.css";
 interface PersonalDataProps {
   name: string;
   weight: number;
-  length: number;
+  height: number;
   age: number;
 }
 
 const PersonalData: React.FC<PersonalDataProps> = ({
   name,
   weight,
-  length,
+  height,
   age,
 }) => {
 
@@ -33,7 +33,7 @@ const PersonalData: React.FC<PersonalDataProps> = ({
           Weight: <span className={styles.parameterText}>{weight} kg</span> 
         </span>
         <span className={styles.labelText}>
-          Length: <span className={styles.parameterText}>{length} Cm</span>
+        Height: <span className={styles.parameterText}>{height} Cm</span>
         </span>
         <span className={styles.labelText}>
           Age: <span className={styles.parameterText}>{age}</span>

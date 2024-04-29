@@ -21,6 +21,7 @@ import styles from "./PatientList.module.css"; // Import the CSS module
 interface Patient {
   id: number;
   name: string;
+  nid:string;
   age: string;
   height: string;
   weight: string;
@@ -37,7 +38,6 @@ interface PatientListProps {
 
 const PatientList: React.FC<PatientListProps> = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAddPatientModal, setShowAddPatientModal] =
     useState<boolean>(false);
 
@@ -65,12 +65,7 @@ const PatientList: React.FC<PatientListProps> = () => {
   const navigate = useNavigate();
 
   const handlePatientNameClick = (patient: Patient) => {
-    setSelectedPatient(patient);
-    navigate(`/emr`);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedPatient(null);
+    navigate(`/emr`, { state: { patientData: patient } }); // Pass patient data as route state
   };
 
   const handleAddPatientClick = () => {
@@ -83,7 +78,7 @@ const PatientList: React.FC<PatientListProps> = () => {
 
   const handlePatientCreate = async (
     name: string,
-    nid: string,
+    // nid: string,
     doctor: string,
   ) => {
     try {
@@ -94,7 +89,7 @@ const PatientList: React.FC<PatientListProps> = () => {
         },
         body: JSON.stringify({
           name,
-          age: nid,
+          age: "",
           height: "",
           weight: "",
           drugs: [],
@@ -160,33 +155,7 @@ const PatientList: React.FC<PatientListProps> = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal for displaying patient details */}
-      <Modal open={Boolean(selectedPatient)} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: "8px",
-          }}
-        >
-          <Typography variant="h6" component="div">
-            Patient Details
-          </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
-            Patient ID: {selectedPatient?.id}
-          </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
-            {/* Add more patient details as needed */}
-          </Typography>
-        </Box>
-      </Modal>
-
-      {/* Modal for creating a new patient */}
+      {/* Modal for adding a new patient */}
       <AddPatientModal
         open={showAddPatientModal}
         onClose={handleAddPatientModalClose}

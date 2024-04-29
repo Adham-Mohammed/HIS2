@@ -3,26 +3,65 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Box, MenuItem, Stack } from "@mui/material";
 import styles from "./Diagnoses.module.css";
+import axios from "axios"; // Import Axios
+import { useNavigate } from "react-router-dom";
 
-const DiagnosticTextField = () => {
+interface DiagnosticPaientID {
+  patientID: number;
+}
+
+interface Patient {
+  id: number;
+  name: string;
+  age: string;
+  height: string;
+  weight: string;
+  drugs: string[];
+  tests: string[];
+  illness: string[];
+  recommendations: string[];
+  doctor: number;
+}
+const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
   const [weight, setWeight] = useState("");
-  const [length, setLength] = useState("");
+  const [height, setHeight] = useState("");
   const [age, setAge] = useState("");
-  const [recommendation, setRecommendation] = useState("");
-  const [illnesse, setIllnesse] = useState("");
+  const [newIllnesse, setIllnesse] = useState("");
+  const [newRecommendation, setRecommendation] = useState("");
   const [drug1, setDrug1] = useState("");
   const [drug2, setDrug2] = useState("");
   const [test1, setTest1] = useState("");
   const [test2, setTest2] = useState("");
 
-  const handleCalculate = () => {
-    // Your Illnesses logic goes here
-    // This is a placeholder logic, replace it with your actual Illnesses algorithm
-    const illnessesResult = `Weight: ${weight}, Length: ${length}, Age: ${age}`;
-    const recommendationResult = "Your recommendation go here";
-    setIllnesse(illnessesResult);
-    setRecommendation(recommendationResult);
+  const updatePatient = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/patients/${patientID}/update/`,
+        {
+          weight,
+          height,
+          age,
+          recommendations: newRecommendation ? [newRecommendation] : [], // Add empty array if newRecommendation is empty
+          illness: newIllnesse ? [newIllnesse] : [], // Add empty array if newIllness is empty
+          drugs: [drug1, drug2].filter(Boolean), // Add drugs array with non-empty elements
+          tests: [test1, test2].filter(Boolean), // Add tests array with non-empty elements
+        }
+      );
+      console.log(response.data);
+
+      // refetch patient data
+      // Optionally, you can handle success message or redirection here
+    } catch (error) {
+      console.error("Error updating patient:", error);
+      // Optionally, you can handle error messages here
+    }
   };
+  const navigate = useNavigate();
+
+  const handelUpdatePatient = ()=>{
+    updatePatient();
+    navigate(`/patientList`);
+  }
   return (
     <>
       {/* this diagnoses text filed section */}
@@ -34,10 +73,10 @@ const DiagnosticTextField = () => {
           onChange={(e) => setWeight(e.target.value)}
         />
         <TextField
-          label="Length"
+          label="Height"
           variant="outlined"
-          value={length}
-          onChange={(e) => setLength(e.target.value)}
+          value={height}
+          onChange={(e) => setHeight(e.target.value)}
         />
         <TextField
           label="Age"
@@ -50,14 +89,14 @@ const DiagnosticTextField = () => {
             label="Illnesse"
             variant="outlined"
             fullWidth
-            value={illnesse}
+            value={newIllnesse}
             onChange={(e) => setIllnesse(e.target.value)}
           />
           <TextField
             label="Recommendation"
             variant="outlined"
             fullWidth
-            value={recommendation}
+            value={newRecommendation}
             onChange={(e) => setRecommendation(e.target.value)}
           />
         </div>
@@ -124,7 +163,9 @@ const DiagnosticTextField = () => {
             {/* Add more test options as needed */}
           </TextField>
         </Stack>
-        <Button className={styles.button}>Done</Button>
+        <Button className={styles.button} onClick={handelUpdatePatient}>
+          Done
+        </Button>
       </Box>
     </>
   );
