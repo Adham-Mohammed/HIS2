@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddPatientModal from "./popUP/AddPatientModal";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./PatientList.module.css"; // Import the CSS module
 
@@ -61,8 +62,11 @@ const PatientList: React.FC<PatientListProps> = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handlePatientNameClick = (patient: Patient) => {
     setSelectedPatient(patient);
+    navigate(`/emr`);
   };
 
   const handleCloseModal = () => {
@@ -79,7 +83,8 @@ const PatientList: React.FC<PatientListProps> = () => {
 
   const handlePatientCreate = async (
     name: string,
-    doctor: number
+    nid: string,
+    doctor: string,
   ) => {
     try {
       const response = await fetch("http://localhost:8000/patients/create/", {
@@ -89,7 +94,7 @@ const PatientList: React.FC<PatientListProps> = () => {
         },
         body: JSON.stringify({
           name,
-          age: "",
+          age: nid,
           height: "",
           weight: "",
           drugs: [],
@@ -138,7 +143,7 @@ const PatientList: React.FC<PatientListProps> = () => {
                 <TableCell className={styles.tableCell}>
                   <Stack direction="row" spacing={2} style={{ width: "100%" }}>
                     <Typography variant="body1" className={styles.patientID}>
-                      ID: {patient.id}
+                      NID: {patient.id}
                     </Typography>
                     <Typography
                       variant="body1"

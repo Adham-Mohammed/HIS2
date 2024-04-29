@@ -7,8 +7,7 @@ import styles from "./AddPatientModal.module.css"; // Import the CSS module
 interface AddPatientModalProps {
   open: boolean;
   onClose: () => void;
-  onPatientCreate: (name: string, id: string, doctor: number) => void;
-}
+  onPatientCreate: ( name: string,nid: string, doctor: string,) => void;}
 
 const AddPatientModal: React.FC<AddPatientModalProps> = ({
   open,
@@ -16,11 +15,11 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
   onPatientCreate,
 }) => {
   const [patientName, setPatientName] = useState("");
-  const [patientID, setPatientID] = useState("");
-  const [doctorID, setDoctorID] = useState(Number);
+  const [patientNID, setPatientNID] = useState("");
+  const [doctorID, setDoctorID] = useState("");
 
   const handleAddPatient = () => {
-    onPatientCreate(patientName, patientID, doctorID);
+    onPatientCreate(patientName, patientNID, doctorID);
     onClose();
   };
 
@@ -50,15 +49,14 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
           <TextField
             label="Patient ID"
             variant="outlined"
-            value={patientID}
-            onChange={(e) => setPatientID(e.target.value)}
+            value={patientNID}
+            onChange={(e) => setPatientNID(e.target.value)}
           />
           <TextField
             label="Doctor ID"
             variant="outlined"
             value={doctorID}
-            type="number"
-            onChange={(e) => setDoctorID(Number(e.target.value))}
+            onChange={(e) => setDoctorID(e.target.value)}
           />
         </Stack>
 
