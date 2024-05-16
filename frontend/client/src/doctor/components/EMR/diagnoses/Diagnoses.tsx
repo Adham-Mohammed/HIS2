@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Box, MenuItem, Stack } from "@mui/material";
+import { Box, MenuItem, Stack, Input } from "@mui/material";
 import styles from "./Diagnoses.module.css";
 import axios from "axios"; // Import Axios
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { CloudUpload, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import { metaData } from "cornerstone-core";
+
+// Define a styled component for the file input
+const CustomFileInput = styled.input`
+  display: none;
+`;
 
 interface DiagnosticPaientID {
   patientID: number;
@@ -32,6 +40,38 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
   const [drug2, setDrug2] = useState("");
   const [test1, setTest1] = useState("");
   const [test2, setTest2] = useState("");
+  const [dicomFile, setDicomFile] = useState();
+  const [dicomFileName, setDicomFileName] = useState("");
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const selectedFile = files[0];
+      setDicomFile(selectedFile);
+      setDicomFileName(selectedFile.name);
+    }
+  };
+
+  const handleAddDicom = async () => {
+    if (!dicomFile) {
+      console.error("No DICOM file selected");
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append("id", String(patientID));
+      formData.append("file", dicomFile);
+      formData.append("metadata", ""); // Add metadata if needed
+
+      const response = await axios.post(
+        `http://localhost:8000/dicom/dicomimage/add/`,
+        formData
+      );
+      // console.log(response.data);
+    } catch (error) {
+      console.error("Error add DICOM file:", error);
+    }
+  };
 
   const updatePatient = async () => {
     try {
@@ -53,37 +93,58 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
       // Optionally, you can handle success message or redirection here
     } catch (error) {
       console.error("Error updating patient:", error);
-      // Optionally, you can handle error messages here
     }
   };
   const navigate = useNavigate();
 
-  const handelUpdatePatient = ()=>{
+  const handelUpdatePatient = () => {
     updatePatient();
     navigate(`/patientList`);
-  }
+  };
+
+  const handleOpenCDSS = () => {
+    navigate(`/CDSS`, { state: { patientID: patientID } });
+  };
   return (
     <>
       {/* this diagnoses text filed section */}
       <Box className={styles.container}>
-        <TextField
-          label="Weight"
-          variant="outlined"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-        />
-        <TextField
-          label="Height"
-          variant="outlined"
-          value={height}
-          onChange={(e) => setHeight(e.target.value)}
-        />
-        <TextField
-          label="Age"
-          variant="outlined"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Stack direction={"row"} spacing={1}>
+            <TextField
+              label="Weight"
+              variant="outlined"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
+            <TextField
+              label="Height"
+              variant="outlined"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+            <TextField
+              label="Age"
+              variant="outlined"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+          </Stack>
+          <Stack>
+            {/* Button to open CDSS */}
+            <Button
+              className={styles.CDSSbutton}
+              onClick={handleOpenCDSS}
+              endIcon={<KeyboardDoubleArrowRight />}
+            >
+              CDSS
+            </Button>
+          </Stack>
+        </Stack>
         <div>
           <TextField
             label="Illnesse"
@@ -163,9 +224,32 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             {/* Add more test options as needed */}
           </TextField>
         </Stack>
-        <Button className={styles.button} onClick={handelUpdatePatient}>
-          Done
-        </Button>
+        <Stack direction="row" spacing={1}>
+          {/* Custom file input */}
+          <label htmlFor="dicom-file">
+            <CustomFileInput
+              id="dicom-file"
+              type="file"
+              onChange={handleFileChange}
+              accept=".dicom"
+            />
+            <Button
+              startIcon={<CloudUpload />}
+              variant="outlined"
+              component="span"
+              className={styles.dicomInputFiled}
+            >
+              {dicomFileName ? dicomFileName : "Choose DICOM File"}
+            </Button>
+          </label>
+          {/* Button to download DICOM file */}
+          <Button className={styles.button} onClick={handleAddDicom}>
+            Add DICOM
+          </Button>
+          <Button className={styles.button} onClick={handelUpdatePatient}>
+            Done
+          </Button>
+        </Stack>
       </Box>
     </>
   );

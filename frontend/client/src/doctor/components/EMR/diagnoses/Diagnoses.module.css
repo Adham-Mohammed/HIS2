@@ -28,3 +28,22 @@
     font-weight: bold!important;
     cursor: pointer!important;
 }
+
+.CDSSbutton{
+  background: linear-gradient(90deg, #13d2de, #01b6b6) !important;
+  border: none!important;
+  border-radius: 0.6rem!important;
+  color: #fff!important;
+  font-weight: bold!important;
+  cursor: pointer!important; 
+  justify-content: space-between;
+  font-size: larger !important;
+}
+
+.dicomInputFiled{
+  background: linear-gradient(90deg, #13d2de, #01b6b6) !important;
+  color: #fff!important;
+  font-weight: bold!important;
+  border: none!important;
+  border-radius: 5px !important;
+}

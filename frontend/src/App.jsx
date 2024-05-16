@@ -14,6 +14,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 // front end of main program
 import EMR from "../client/src/doctor/components/EMR/EMR";
 import PatientList from "../client/src/doctor/components/patientList/PatientList";
+import CDSS from "../client/src/doctor/components/EMR/cdss/Cdss";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/emr" element={<EMR />} />
           <Route path="/patientList" element={<PatientList />} />
+          <Route path="/CDSS" element={<CDSS />} />
         </Routes>
       </Router>
       <ToastContainer />
