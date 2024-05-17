@@ -57,33 +57,38 @@ const CDSS = () => {
 
     fetchPatient();
   }, [patientID]);
+
   const fetchDICOM = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8000/dicom/dicomimage/${patientID}`
-      );
+      const response = await fetch(`http://localhost:8000/dicom/dicomimage/${patientID}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch patient");
+        throw new Error("Failed to fetch DICOM");
       }
 
       const data = await response.json();
       console.log("Response data:", data);
 
-      setPatient(data);
+      // Assuming 'file_paths' contains the URLs of the DICOM images
+      if (data.file_paths && Array.isArray(data.file_paths)) {
+      } else {
+        console.error("Invalid data format: 'file_paths' is missing or not an array");
+      }
     } catch (error) {
-      console.error("Error fetching patient:", error);
+      console.error("Error fetching DICOM:", error);
     }
   };
+
+  // useEffect(() => {
+  //   fetchDICOM();
+  // }, [patientID]);
 
   const handleGoBack = () => {
     navigate(`/emr`, { state: { patientData: patient } });
   };
 
-  // const handleOpenCDSS = () => {
-  //   fetchDICOM();
-  // };
 
   const handleCdssResultClick = () => {
+    fetchDICOM()
     setShowCdssResultModal(true);
   };
 

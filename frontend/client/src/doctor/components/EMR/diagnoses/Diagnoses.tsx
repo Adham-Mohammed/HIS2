@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Box, MenuItem, Stack, Input } from "@mui/material";
+import { Box, MenuItem, Stack } from "@mui/material";
 import styles from "./Diagnoses.module.css";
 import axios from "axios"; // Import Axios
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { CloudUpload, KeyboardDoubleArrowRight } from "@mui/icons-material";
-import { metaData } from "cornerstone-core";
 
 // Define a styled component for the file input
 const CustomFileInput = styled.input`
@@ -30,6 +29,7 @@ interface Patient {
   recommendations: string[];
   doctor: number;
 }
+
 const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
@@ -40,36 +40,40 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
   const [drug2, setDrug2] = useState("");
   const [test1, setTest1] = useState("");
   const [test2, setTest2] = useState("");
-  const [dicomFile, setDicomFile] = useState();
-  const [dicomFileName, setDicomFileName] = useState("");
+  const [dicomFiles, setDicomFiles] = useState<FileList | null>(null);
+  const [dicomFileNames, setDicomFileNames] = useState<string[]>([]);
+  const [uploadMessage, setUploadMessage] = useState<string>("");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const selectedFile = files[0];
-      setDicomFile(selectedFile);
-      setDicomFileName(selectedFile.name);
+      setDicomFiles(files);
+      setDicomFileNames(Array.from(files).map((file) => file.name));
     }
   };
 
   const handleAddDicom = async () => {
-    if (!dicomFile) {
-      console.error("No DICOM file selected");
+    if (!dicomFiles || dicomFiles.length !== 4) {
+      console.error("Exactly 4 DICOM files must be selected");
       return;
     }
     try {
       const formData = new FormData();
       formData.append("id", String(patientID));
-      formData.append("file", dicomFile);
+      Array.from(dicomFiles).forEach((file) => {
+        formData.append("files", file);
+      });
       formData.append("metadata", ""); // Add metadata if needed
 
       const response = await axios.post(
         `http://localhost:8000/dicom/dicomimage/add/`,
         formData
       );
-      // console.log(response.data);
+      console.log(response.data);
+      setUploadMessage("Images upload successfully");
+      setDicomFileNames([]); // Clear file names
     } catch (error) {
-      console.error("Error add DICOM file:", error);
+      console.error("Error adding DICOM files:", error);
     }
   };
 
@@ -81,10 +85,10 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
           weight,
           height,
           age,
-          recommendations: newRecommendation ? [newRecommendation] : [], // Add empty array if newRecommendation is empty
-          illness: newIllnesse ? [newIllnesse] : [], // Add empty array if newIllness is empty
-          drugs: [drug1, drug2].filter(Boolean), // Add drugs array with non-empty elements
-          tests: [test1, test2].filter(Boolean), // Add tests array with non-empty elements
+          recommendations: newRecommendation ? [newRecommendation] : [],
+          illness: newIllnesse ? [newIllnesse] : [],
+          drugs: [drug1, drug2].filter(Boolean),
+          tests: [test1, test2].filter(Boolean),
         }
       );
       console.log(response.data);
@@ -95,6 +99,7 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
       console.error("Error updating patient:", error);
     }
   };
+
   const navigate = useNavigate();
 
   const handelUpdatePatient = () => {
@@ -105,9 +110,9 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
   const handleOpenCDSS = () => {
     navigate(`/CDSS`, { state: { patientID: patientID } });
   };
+
   return (
     <>
-      {/* this diagnoses text filed section */}
       <Box className={styles.container}>
         <Stack
           direction="row"
@@ -135,7 +140,6 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             />
           </Stack>
           <Stack>
-            {/* Button to open CDSS */}
             <Button
               className={styles.CDSSbutton}
               onClick={handleOpenCDSS}
@@ -162,7 +166,6 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
           />
         </div>
 
-        {/* this drop list section */}
         <Stack direction="row" spacing={1.5}>
           <TextField
             select
@@ -172,11 +175,9 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             variant="outlined"
             fullWidth
           >
-            {/* Placeholder for drug options */}
             <MenuItem value="Aspirin">Aspirin</MenuItem>
             <MenuItem value="Ibuprofen">Ibuprofen</MenuItem>
             <MenuItem value="Paracetamol">Paracetamol</MenuItem>
-            {/* Add more drug options as needed */}
           </TextField>
           <TextField
             select
@@ -186,11 +187,9 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             variant="outlined"
             fullWidth
           >
-            {/* Placeholder for drug options */}
             <MenuItem value="Aspirin">Aspirin</MenuItem>
             <MenuItem value="Ibuprofen">Ibuprofen</MenuItem>
             <MenuItem value="Paracetamol">Paracetamol</MenuItem>
-            {/* Add more drug options as needed */}
           </TextField>
         </Stack>
 
@@ -203,11 +202,9 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             variant="outlined"
             fullWidth
           >
-            {/* Placeholder for test options */}
             <MenuItem value="Blood Test">Blood Test</MenuItem>
             <MenuItem value="X-Ray">X-Ray</MenuItem>
             <MenuItem value="MRI">MRI</MenuItem>
-            {/* Add more test options as needed */}
           </TextField>
           <TextField
             select
@@ -217,21 +214,19 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
             variant="outlined"
             fullWidth
           >
-            {/* Placeholder for test options */}
             <MenuItem value="Blood Test">Blood Test</MenuItem>
             <MenuItem value="X-Ray">X-Ray</MenuItem>
             <MenuItem value="MRI">MRI</MenuItem>
-            {/* Add more test options as needed */}
           </TextField>
         </Stack>
         <Stack direction="row" spacing={1}>
-          {/* Custom file input */}
-          <label htmlFor="dicom-file">
+          <label htmlFor="dicom-files">
             <CustomFileInput
-              id="dicom-file"
+              id="dicom-files"
               type="file"
-              onChange={handleFileChange}
+              onChange={handleFilesChange}
               accept=".dicom"
+              multiple
             />
             <Button
               startIcon={<CloudUpload />}
@@ -239,10 +234,11 @@ const DiagnosticTextField: React.FC<DiagnosticPaientID> = ({ patientID }) => {
               component="span"
               className={styles.dicomInputFiled}
             >
-              {dicomFileName ? dicomFileName : "Choose DICOM File"}
+              {uploadMessage || (dicomFileNames.length > 0
+                ? dicomFileNames.join(", ")
+                : "Choose DICOM Files")}
             </Button>
           </label>
-          {/* Button to download DICOM file */}
           <Button className={styles.button} onClick={handleAddDicom}>
             Add DICOM
           </Button>
