@@ -1,5 +1,4 @@
-// PatientList.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -15,12 +14,22 @@ import {
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddPatientModal from "./popUP/AddPatientModal";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./PatientList.module.css"; // Import the CSS module
 
 interface Patient {
-  patientName: string;
-  patientID: number;
+  id: number;
+  name: string;
+  nid:string;
+  age: string;
+  height: string;
+  weight: string;
+  drugs: string[];
+  tests: string[];
+  illness: string[];
+  recommendations: string[];
+  doctor:number;
 }
 
 interface PatientListProps {
@@ -28,23 +37,35 @@ interface PatientListProps {
 }
 
 const PatientList: React.FC<PatientListProps> = () => {
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [showAddPatientModal, setShowAddPatientModal] =
     useState<boolean>(false);
-  // data shown in the table, should be replaced by dataBase
-  const rowData: Patient[] = [
-    { patientName: "John Doe", patientID: 1 },
-    { patientName: "Jane Smith", patientID: 2 },
-    { patientName: "Bob Johnson", patientID: 3 },
-    // Add more data as needed
-  ];
 
-  const handlePatientNameClick = (patient: Patient) => {
-    setSelectedPatient(patient);
+  useEffect(() => {
+    // Fetch patient data from Django backend
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/patients/");
+      if (!response.ok) {
+        throw new Error("Failed to fetch patients");
+      }
+
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      setPatients(data);
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    }
   };
 
-  const handleCloseModal = () => {
-    setSelectedPatient(null);
+  const navigate = useNavigate();
+
+  const handlePatientNameClick = (patient: Patient) => {
+    navigate(`/emr`, { state: { patientData: patient } }); // Pass patient data as route state
   };
 
   const handleAddPatientClick = () => {
@@ -54,6 +75,43 @@ const PatientList: React.FC<PatientListProps> = () => {
   const handleAddPatientModalClose = () => {
     setShowAddPatientModal(false);
   };
+
+  const handlePatientCreate = async (
+    name: string,
+    // nid: string,
+    doctor: string,
+  ) => {
+    try {
+      const response = await fetch("http://localhost:8000/patients/create/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          age: "",
+          height: "",
+          weight: "",
+          drugs: [],
+          tests: [],
+          illness: [],
+          recommendations: [],
+          doctor,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to create patient");
+      }
+  
+      // Refetch patients after creating a new one
+      fetchPatients();
+  
+      setShowAddPatientModal(false); // Close the modal after successful creation
+    } catch (error) {
+      console.error("Error creating patient:", error);
+    }
+  };  
 
   return (
     <Box className={styles.patientListContainer}>
@@ -73,24 +131,21 @@ const PatientList: React.FC<PatientListProps> = () => {
             Add New Patient
           </Button>
         </div>
-
         <Table className={styles.table}>
           <TableBody>
-            {rowData.map((row, index) => (
+            {patients.map((patient, index) => (
               <TableRow key={index}>
                 <TableCell className={styles.tableCell}>
                   <Stack direction="row" spacing={2} style={{ width: "100%" }}>
                     <Typography variant="body1" className={styles.patientID}>
-                      ID:
-                      {row.patientID}
+                      NID: {patient.id}
                     </Typography>
-                    {/* </div> */}
                     <Typography
                       variant="body1"
                       className={styles.patientName}
-                      onClick={() => handlePatientNameClick(row)}
+                      onClick={() => handlePatientNameClick(patient)}
                     >
-                      {row.patientName}
+                      {patient.name}
                     </Typography>
                   </Stack>
                 </TableCell>
@@ -100,40 +155,11 @@ const PatientList: React.FC<PatientListProps> = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal for displaying patient details */}
-      <Modal open={Boolean(selectedPatient)} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: "8px",
-          }}
-        >
-          <Typography variant="h6" component="div">
-            Patient Details
-          </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
-            Patient ID: {selectedPatient?.patientID}
-          </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
-            {/* Add more patient details as needed */}
-          </Typography>
-        </Box>
-      </Modal>
-
-      {/* Modal for creating a new patient */}
+      {/* Modal for adding a new patient */}
       <AddPatientModal
         open={showAddPatientModal}
         onClose={handleAddPatientModalClose}
-        onPatientCreate={(name, id) => {
-          // Placeholder function, you can handle patient creation logic here
-          console.log("Creating patient with name:", name, "and ID:", id);
-        }}
+        onPatientCreate={handlePatientCreate}
       />
     </Box>
   );

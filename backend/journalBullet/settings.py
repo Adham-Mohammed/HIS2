@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # Internal Apps
     'userauth',
     'emr',
+    'dicom',
 ]
 
 MIDDLEWARE = [
@@ -186,3 +187,6 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = "info@journal-bullet.com"
 DOMAIN = env("DOMAIN")
 SITE_NAME = "Journal Bullet"
+
+
+DATA_UPLOAD_MAX_MEMORY_SIZE =None

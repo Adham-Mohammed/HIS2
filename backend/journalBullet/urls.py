@@ -16,15 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from emr import views
+from emr import views as emr_views
+from dicom import views as dicom_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/v1/auth/", include('djoser.urls')),
     path("api/v1/auth/", include('djoser.urls.jwt')),
-    path('patients/', views.list_patients, name='list_patients'),
-    path('patients/create/', views.create_patient, name='create_patient'),
-    path('patients/<int:patient_id>/delete/', views.delete_patient, name='delete_patient'),
-    path('patients/<int:patient_id>/', views.retrieve_patient, name='retrieve_patient'),
-    path('patients/<int:patient_id>/update/', views.update_patient, name='update_patient'),
+    path('patients/', emr_views.list_patients, name='list_patients'),
+    path('patients/create/', emr_views.create_patient, name='create_patient'),
+    path('patients/<int:patient_id>/delete/', emr_views.delete_patient, name='delete_patient'),
+    path('patients/<int:patient_id>/', emr_views.retrieve_patient, name='retrieve_patient'),
+    path('patients/<int:patient_id>/update/', emr_views.update_patient, name='update_patient'),
+
+    # DICOM URLs
+    path('dicom/dicomimage/', dicom_views.list_dicom_images, name='list_dicom_images'),
+    path('dicom/dicomimage/add/', dicom_views.add_dicom_image, name='add_dicom_image'),
+    path('dicom/dicomimage/<int:image_id>/', dicom_views.retrieve_dicom_image, name='retrieve_dicom_image'),
+    path('dicom/dicomimage/<int:image_id>/delete/', dicom_views.delete_dicom_image, name='delete_dicom_image'),
+
 ]

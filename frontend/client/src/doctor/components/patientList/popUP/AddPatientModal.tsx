@@ -1,14 +1,20 @@
 // addPatientModal.tsx
 import React, { useState } from "react";
-import { Box, Modal, Button, Stack, IconButton, TextField } from "@mui/material";
+import {
+  Box,
+  Modal,
+  Button,
+  Stack,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./AddPatientModal.module.css"; // Import the CSS module
 
 interface AddPatientModalProps {
   open: boolean;
   onClose: () => void;
-  onPatientCreate: (name: string, id: string) => void;
-}
+  onPatientCreate: ( name: string,nid: string, doctor: string,) => void;}
 
 const AddPatientModal: React.FC<AddPatientModalProps> = ({
   open,
@@ -16,10 +22,11 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
   onPatientCreate,
 }) => {
   const [patientName, setPatientName] = useState("");
-  const [patientID, setPatientID] = useState("");
+  const [patientNID, setPatientNID] = useState("");
+  const [doctorID, setDoctorID] = useState("");
 
   const handleAddPatient = () => {
-    onPatientCreate(patientName, patientID);
+    onPatientCreate(patientName, patientNID, doctorID);
     onClose();
   };
 
@@ -47,11 +54,17 @@ const AddPatientModal: React.FC<AddPatientModalProps> = ({
             onChange={(e) => setPatientName(e.target.value)}
           />
           <TextField
-            label="Patient ID"
+            label="National ID"
             variant="outlined"
-            value={patientID}
-            onChange={(e) => setPatientID(e.target.value)}
+            value={patientNID}
+            onChange={(e) => setPatientNID(e.target.value)}
           />
+          {/* <TextField
+            label="Doctor ID"
+            variant="outlined"
+            value={doctorID}
+            onChange={(e) => setDoctorID(e.target.value)}
+          /> */}
         </Stack>
 
         <Button
